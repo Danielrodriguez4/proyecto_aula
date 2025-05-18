@@ -25,12 +25,14 @@ class RegistroController
         $alm = new User();
         $estudiante = new Usuario();
 
-        $alm->code = $_POST['code'];
-        $alm->name = $_POST['name'];
-        $alm->last_name = $_POST['last_name'];
-        $alm->telephone = $_POST['telephone'];
+        $alm->nombre = $_POST['nombre'];
+        $alm->apellido = $_POST['apellido'];
+        $alm->num_id = $_POST['num_id'];
+        $alm->codigo = $_POST['codigo'];
+        $alm->semestre = $_POST['semestre'];
+        $alm->telefono = $_POST['telefono'];
         $alm->sexo = $_POST['sexo'];
-        $alm->email = $_POST['email'];
+        $alm->correo = $_POST['correo'];
         $alm->password = $_POST['password'];
         $alm = $this->model->Registrar($alm);
 
@@ -38,12 +40,14 @@ class RegistroController
 
         if ($alm) {
             $_SESSION['user'] = $alm;
-            $estudiante->codigo = $_POST['code'];
-            $estudiante->nombre = $_POST['name'];
-            $estudiante->apellido = $_POST['last_name'];
+            $estudiante->nombre = $_POST['nombre'];
+            $estudiante->apellido = $_POST['apellido'];
+            $estudiante->num_id = $_POST['num_id'];
+            $estudiante->codigo = $_POST['codigo'];
+            $estudiante->semestre = $_POST['semestre'];
             $estudiante->telefono = $_POST['telephone'];
             $estudiante->sexo = $_POST['sexo'];
-            $estudiante->correo = $_POST['email'];
+            $estudiante->correo = $_POST['correo'];
 
             $estudiante->Registrar($estudiante);
             header('Location: /?c=dashboard');

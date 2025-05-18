@@ -56,11 +56,13 @@ create table if not exists informacionpersonal
 		primary key,
 	nombre varchar(50) default '0' not null,
 	apellido varchar(50) default '0' not null,
+	num_id varchar(11) not null,
+	codigo int not null,
+	semestre int not null,
+	telefono varchar(50) not null,
 	sexo tinytext not null,
 	correo varchar(50) not null,
 	user int not null,
-	telefono varchar(15) null,
-	codigo int not null,
 	constraint informacionpersonal_user_id_fk
 		foreign key (user) references user (id)
 );
@@ -91,12 +93,14 @@ charset=utf8mb4;
 create table if not exists usuarios
 (
 	id int auto_increment,
-	codigo int not null,
 	nombre text not null,
 	apellido text not null,
-	correo varchar(250) not null,
+	num_id int not null,
+	codigo int not null,
+	semestre int not null,
 	telefono varchar(10) not null,
 	sexo varchar(10) null,
+	correo varchar(250) not null,
 	user int not null,
 	constraint estudiantes_codigo_uindex
 		unique (codigo),
@@ -131,8 +135,8 @@ create table if not exists ferias
 	id int(10) auto_increment
 		primary key,
 	nom_cur varchar(100) not null,
-	doc-ori varchar(200) not null,
-	tiem-eje varchar(50) not null,
+	doc_ori varchar(200) not null,
+	tiem_eje varchar(50) not null,
 	fecha_entrega datetime default CURRENT_TIMESTAMP not null,
 	fecha_fin datetime default CURRENT_TIMESTAMP not null,
 	est_por float not null,
@@ -143,6 +147,7 @@ create table if not exists ferias
 	nota int default 0 null,
 	estado int default 1 null,
 	user int not null,
+	director int null,
 	constraint ferias_docentes_id_fk
 		foreign key (director) references evaluadores (id),
 	constraint ferias_user_id_fk

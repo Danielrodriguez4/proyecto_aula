@@ -3,7 +3,7 @@ version: '3'
 services:
   mysql:
     image: mysql:5.7
-    container_name: docker-mysql
+    container_name: mysql-agpa
     environment:
       MYSQL_DATABASE: agpa  
       MYSQL_USER: agpa
@@ -15,6 +15,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-agpa
     restart: always
     environment:
       PMA_HOST: mysql
@@ -25,7 +26,7 @@ services:
     
   web:
     build: ./
-    container_name: docker-php
+    container_name: php-agpa
     ports:
       - "80:80"
     volumes:

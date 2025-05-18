@@ -44,10 +44,6 @@
                         <input type="number" name="semestre" value="<?php echo $alm->semestre; ?>" class="form-control" placeholder="Ingrese semestre" data-validacion-tipo="requerido|min:3" />
                     </div>
 
-                    <div class="form-group">
-                        <label>Correo</label>
-                        <input type="email" name="correo" value="<?php echo $alm->correo; ?>"class="form-control" placeholder="Correo">
-                    </div>
 
                     <div class="form-group">
                         <label>Telefono</label>
@@ -60,6 +56,11 @@
                              <option value="m" selected>Masculino</option>
                              <option value="f">Femenino</option>
                              </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" name="correo" value="<?php echo $alm->correo; ?>"class="form-control" placeholder="Correo">
                     </div>
 
                 </div>

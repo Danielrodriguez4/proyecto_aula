@@ -17,7 +17,7 @@
                     <div class="input-group input-group-sm">
                     <?php
                         if ($_SESSION['user']->rol == 2) {
-                            echo '<a href="?c=Estudiantes&a=Crud&p='. $alm->id .'"  style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Estudiante</a>';
+                            echo '<a href="?c=usuarios&a=Crud&p='. $alm->id .'"  style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Estudiante</a>';
                         }
                         ?>   
                     </div>

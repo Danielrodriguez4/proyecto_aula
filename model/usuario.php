@@ -9,9 +9,9 @@ class Usuario
     public $num_id;
     public $codigo;
     public $semestre;
-    public $correo;
     public $telefono;
     public $sexo;
+    public $correo;
     public $fechaRegistro;
 
 	public function __CONSTRUCT()
@@ -86,9 +86,9 @@ class Usuario
 						num_id          = ?,
 						codigo          = ?,
 						semestre          = ?,
-                        correo        = ?
 						telefono         = ?,
                         sexo			 = ?,
+                        correo        = ?
 				    WHERE id = ? AND user = ?";
 
 			$this->pdo->prepare($sql)
@@ -99,9 +99,9 @@ class Usuario
                         $data->num_id,
                         $data->codigo,
                         $data->semestre,
-                        $data->correo,
                         $data->telefono, 
                         $data->sexo, 
+                        $data->correo,
                         $data->id,
 						$_SESSION['user']->id 
 					)
@@ -132,21 +132,21 @@ class Usuario
 	{
 		try 
 		{
-		$sql = "INSERT INTO usuarios (nombre,apellido,num_id,codigo,semestre,correo,telefono,sexo,user) 
+		$sql = "INSERT INTO usuarios (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,user) 
 		        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		$this->pdo->prepare($sql)
 		     ->execute(
 				array(
-                    $data->nombre,
+                    	$data->nombre,
                         $data->apellido,
                         $data->num_id,
                         $data->codigo,
                         $data->semestre,
-                        $data->correo,
                         $data->telefono, 
                         $data->sexo,
-					$_SESSION['user']->id 
+                        $data->correo,
+						$_SESSION['user']->id 
                 )
 			);
 			$student = new Usuario();

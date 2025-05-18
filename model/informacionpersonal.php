@@ -9,9 +9,9 @@ class InformacionPersonal
     public $num_id;
     public $codigo;
     public $semestre;
-    public $correo;
     public $telefono;
     public $sexo;
+    public $correo;
     public $fecha_registro;
     public $user;
 
@@ -69,9 +69,9 @@ class InformacionPersonal
 						num_id          = ?,
 						codigo          = ?,
 						semestre          = ?,
-                        correo        = ?
 						telefono         = ?,
                         sexo			 = ?,
+                        correo        = ?
 				    WHERE id = ?";
 
 			$this->pdo->prepare($sql)
@@ -82,9 +82,9 @@ class InformacionPersonal
                         $data->num_id,
                         $data->codigo,
                         $data->semestre,
-                        $data->correo,
                         $data->telefono, 
-                        $data->sexo,  
+                        $data->sexo,
+                        $data->correo, 
                         $data->id
 					)
 				);
@@ -98,7 +98,7 @@ class InformacionPersonal
 	{
 		try 
 		{
-		$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,correo,telefono,sexo,fecha_registro) 
+		$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,fecha_registro) 
 		        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		$this->pdo->prepare($sql)
@@ -108,10 +108,10 @@ class InformacionPersonal
                     $data->apellido,
                     $data->num_id,
                     $data->codigo,
-                    $data->semestre,
-                    $data->correo,  
+                    $data->semestre,  
                     $data->telefono,
                     $data->sexo,
+                    $data->correo,
                     $data->fecha_registro,
                 )
 			);

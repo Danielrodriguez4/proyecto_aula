@@ -61,7 +61,7 @@ class User
 					)
 				);
 				$stm = $this->Obtener($data->correo);
-			$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,correo,telefono,sexo,user) 
+			$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,user) 
 		        VALUES (?,?,?,?,?,?,?,?,?);";
 
 			$this->pdo->prepare($sql)
@@ -72,9 +72,9 @@ class User
 						$data->num_id,
 						$data->codigo,
 						$data->semestre,
-						$data->correo,
 						$data->telefono,
 						$data->sexo,
+						$data->correo,
 						$stm->id
 						
 					)
