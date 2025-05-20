@@ -75,6 +75,14 @@
                     </a>
                   </li>
                   <li class="nav-item">
+                    <a style="color: white;" href="/?c=Convocatorias" class="nav-link">
+                      <i class="nav-icon fas fa-folder"></i>
+                      <p>
+                        Convocatorias
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a style="color: white;" href="/?c=proyectos" class="nav-link">
                       <i class="nav-icon fas fa-folder"></i>
                       <p>

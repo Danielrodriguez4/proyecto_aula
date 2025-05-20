@@ -26,12 +26,13 @@
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                         <?php
-                        if ($_SESSION['user']->rol == 2) {
+                        if ($_SESSION['user']->rol == 2  && empty($this->model->Listar($_REQUEST['table_search']))) {
                             echo '<a href="?c=feria&a=editar" style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Registrar proyecto</a>';
                         }
                         ?>
                     </div>
                 </div>
+
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
@@ -44,6 +45,7 @@
                             <th>Observación</th>
                             <th>Entregado</th>
                             <th>Estado</th>
+                            <th>Jurado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,7 +56,6 @@
                                 <td><?php echo $r->archivo; ?></td>
                                 <td><?php echo $r->comentario; ?></td>
                                 <td><?php echo $r->fecha_entrega; ?></td>
-                                <td><?php echo $r->estado; ?></td>
                                 <td>
                                     <?php
                                     if ($r->estado == 1) {
@@ -72,22 +73,30 @@
 
                                     ?>
                                 </td>
+                                <td><?php echo $r->jurado; ?></td></td>
                                 <td class="text-right py-0 align-middle">
                                     <div class="btn-group btn-group-sm">
                                         <a href="?c=feria&a=editar&id=<?php echo $r->id; ?>" class="fas fa-eye" style="color:black;"></a>
+                                        <?php
+                                        if ($_SESSION['user']->rol == 3) {
+                                            echo '<a class="btn btn-danger" onclick="javascript:return confirm(\'¿Seguro de Evaluar Proyectos?\');" href="?c=feria&a=evaluadores&id=' . $r->id . '"><i class="fas fa-trash" style="color:white;"></i></a>';
+                                        }
+
+                                        ?>
                                     </div>
                                 </td>
                                 <td class="text-right py-0 align-middle">
                                     <div class="btn-group btn-group-sm">
                                         <?php
                                         if ($_SESSION['user']->rol == 1) {
-                                            echo '<a class="btn btn-danger" onclick="javascript:return confirm(\'¿Seguro de eliminar este registro?\');" href="?c=proyectos&a=Eliminar&id=' . $r->id . '"><i class="fas fa-trash" style="color:white;"></i></a>';
+                                            echo '<a class="btn btn-danger" onclick="javascript:return confirm(\'¿Seguro de eliminar este registro?\');" href="?c=feria&a=Eliminar&id=' . $r->id . '"><i class="fas fa-trash" style="color:white;"></i></a>';
                                         }
 
                                         ?>
                                     </div>
                                 </td>
                             </tr>
+                            
                         <?php endforeach; ?>
                     </tbody>
                 </table>

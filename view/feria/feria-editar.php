@@ -10,9 +10,8 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            
             <div class="card-header">
-                
-
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                     <?php
@@ -21,15 +20,16 @@
                         }
                         ?>   
                     </div>
-                </div>
+                </div>            
             </div>
+
             <form id="frm-feria" action="?c=feria&a=Guardar" method="post" enctype="multipart/form-data">
                 <div class="card-body">
                     <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
 
                     <div class="form-group">
                         <label>Nombre de la Asignatura - Grupo </label>
-                        <input type="text" name="num_cur" value="<?php echo $alm->num_cur; ?>" class="form-control" placeholder="Ingrese Nombre de la Asignatura - Grupo " data-validacion-tipo="requerido|min:3" />
+                        <input type="text" name="nom_cur" value="<?php echo $alm->nom_cur; ?>" class="form-control" placeholder="Ingrese Nombre de la Asignatura - Grupo " data-validacion-tipo="requerido|min:3" />
                     </div>
                     <div class="form-group">
                         <label>Nombre del docente orientador </label>
@@ -39,6 +39,15 @@
                         <label>Proyecto está proyectado  para ejecutarlo en:</label>
                         <input type="text" name="tiem_eje" value="<?php echo $alm->tiem_eje; ?>" class="form-control" placeholder="Ingrese numero de meses que el proyecto está proyectado  para ejecutarlo" data-validacion-tipo="requerido|min:3" />
                     </div>
+                    <div class="form-group">
+                        <label>Fecha de entrega: <?php echo $alm->fecha_entrega; ?></label>
+                        <input type="date" name="fecha_entrega" value="<?php echo $alm->fecha_entrega; ?>" class="form-control" placeholder="Ingrese la fecha en la que  inicio el proyecto" data-validacion-tipo="requerido|min:3" />
+                    </div>
+                     <div class="form-group">
+                        <label>Fecha de finalizacion</label>
+                        <input type="date" name="fecha_fin" value="<?php echo $alm->fecha_fin; ?>" class="form-control" placeholder="Ingrese la fecha en la que  inicio el proyecto" data-validacion-tipo="requerido|min:3" />
+                    </div>
+                   
                     <div class="form-group">
                         <label>Estado del proyecto</label>
                         <select name="est_por" class="form-control">
@@ -89,7 +98,7 @@
                     } else {
                     ?><div class="form-group">
                             <p><strong>Observaciones: </strong><?php echo $alm->comentario ?></p>
-                            <input type="text" name="comentario" value="<?php echo $alm->comentario; ?>" class="form-control" placeholder="Agregue Comentarios" data-validacion-tipo="requerido|min:10" />
+                            <input readonly type="text" name="comentario" value="<?php echo $alm->comentario; ?>" class="form-control" placeholder="Agregue Comentarios" data-validacion-tipo="requerido|min:10" />
                         </div>
                     <?php
                     }

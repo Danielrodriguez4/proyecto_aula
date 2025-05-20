@@ -192,7 +192,7 @@ class Feria
 	public function Registrar(Feria $data)
 	{
 		try {
-			$sql = "INSERT INTO feria (nom_cur,doc_ori,tiem_eje,fecha_entrega,fecha_fin,est_por,tip_pro,archivo,user) 
+			$sql = "INSERT INTO ferias (nom_cur,doc_ori,tiem_eje,fecha_entrega,fecha_fin,est_por,tip_pro,archivo,user) 
 		        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			$fichero_subido = $this->dir_subida . basename($data->archivo['name']);
@@ -209,7 +209,6 @@ class Feria
 						$data->est_por,
 						$data->tip_pro,
 						$data->archivo,
-						$data->comentario,
 						$data->user
 					)
 				);
