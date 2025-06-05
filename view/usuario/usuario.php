@@ -39,6 +39,7 @@ if ($_SESSION['user']->rol == 2) {
                                 <th>Correo</th>
                                 <th>Telefono</th>
                                 <th>Sexo</th>
+                                <th>Cargo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,15 +53,11 @@ if ($_SESSION['user']->rol == 2) {
                                     <td><?php echo $r->correo; ?></td>
                                     <td><?php echo $r->telefono; ?></td>
                                     <td><?php echo $r->sexo; ?></td>
-                                    <td class="text-right py-0 align-middle">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="?c=Usuarios&a=Editar" style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Integrante</a>
-                                        </div>
-                                    </td>
+                                    <td><?php echo $r->cargo; ?></td>
                                     <td class="text-right py-0 align-middle">
                                         <div class="btn-group btn-group-sm">
                                             <?php
-                                            if ($_SESSION['user']->rol == 1) {
+                                            if ($_SESSION['user']->rol == 2) {
                                                 echo '<a class="btn btn-danger" onclick="javascript:return confirm(\'¿Seguro de eliminar este registro?\');" href="?c=usuarios&a=Eliminar&id=' . $r->id . '"><i class="fas fa-trash" style="color:white;"></i></a>';
                                             }
 
@@ -143,6 +140,7 @@ if ($_SESSION['user']->rol == 2) {
                                 <th>Correo</th>
                                 <th>Telefono</th>
                                 <th>Sexo</th>
+                                <th>Cargo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,15 +154,12 @@ if ($_SESSION['user']->rol == 2) {
                                     <td><?php echo $r->correo; ?></td>
                                     <td><?php echo $r->telefono; ?></td>
                                     <td><?php echo $r->sexo; ?></td>
-                                    <td class="text-right py-0 align-middle">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="?c=Usuarios&a=Editar" style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Integrante</a>
-                                        </div>
-                                    </td>
+                                    <td><?php echo $r->cargo; ?></td>
+                                    
                                     <td class="text-right py-0 align-middle">
                                         <div class="btn-group btn-group-sm">
                                             <?php
-                                            if ($_SESSION['user']->rol == 1) {
+                                            if ($_SESSION['user']->rol == 1||$rol ==2) {
                                                 echo '<a class="btn btn-danger" onclick="javascript:return confirm(\'¿Seguro de eliminar este registro?\');" href="?c=usuarios&a=Eliminar&id=' . $r->id . '"><i class="fas fa-trash" style="color:white;"></i></a>';
                                             }
 
@@ -184,3 +179,4 @@ if ($_SESSION['user']->rol == 2) {
 
 }
 ?>
+

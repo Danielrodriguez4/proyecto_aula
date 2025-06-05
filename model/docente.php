@@ -1,5 +1,5 @@
 <?php
-class Evaluador
+class Docente
 {
 	private $pdo;
 	public $id;
@@ -18,29 +18,25 @@ class Evaluador
 		}
 	}
 
-	public function Listar()
-	{
-		try {
-			$result = array();
-			if ($_SESSION['user']->rol == 1) {
-				$stm = $this->pdo->prepare("SELECT * FROM evaluadores");
-				$stm->execute();
-				return $stm->fetchAll(PDO::FETCH_OBJ);
-			}else{
-				return [];
-			}
+public function Listar()
+{
+    try {
+        $sql = "SELECT * FROM docentes";
+        $stm = $this->pdo->prepare($sql);
+        $stm->execute();
+        return $stm->fetchAll(PDO::FETCH_OBJ);
+    } catch (Exception $e) {
+        error_log("Error en Docentes::Listar: ".$e->getMessage());
+        return [];
+    }
+}
 
-			
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
 
 	public function Obtener($id)
 	{
 		try {
 			$stm = $this->pdo
-				->prepare("SELECT * FROM evaluadores WHERE id = ?");
+				->prepare("SELECT * FROM docentes WHERE id = ?");
 
 
 			$stm->execute(array($id));
@@ -54,7 +50,7 @@ class Evaluador
 	{
 		try {
 			$stm = $this->pdo
-				->prepare("DELETE FROM evaluadores WHERE id = ?");
+				->prepare("DELETE FROM docentes WHERE id = ?");
 
 			$stm->execute(array($id));
 		} catch (Exception $e) {
@@ -65,7 +61,7 @@ class Evaluador
 	public function Actualizar($data)
 	{
 		try {
-			$sql = "UPDATE evaluadores SET 
+			$sql = "UPDATE docentes SET 
 						codigo          = ?,
 						nombre          = ?, 
 						apellido        = ?,
@@ -94,10 +90,21 @@ class Evaluador
 		}
 	}
 
-	public function Registrar(Evaluador $data)
+	public function ObtenerPorCodigo($codigo) {
+		try {
+			$stm = $this->pdo->prepare("SELECT * FROM docentes WHERE codigo = ?");
+			$stm->execute([$codigo]);
+			return $stm->fetch(PDO::FETCH_OBJ);
+		} catch (Exception $e) {
+			die($e->getMessage());
+		}
+	}
+
+
+	public function Registrar(Docente $data)
 	{
 		try {
-			$sql = "INSERT INTO evaluadores (codigo,nombre,apellido,correo,cargo) 
+			$sql = "INSERT INTO docentes (codigo,nombre,apellido,correo,cargo) 
 		        VALUES (?, ?, ?, ?, ?)";
 
 			//$fichero_subido = $this->dir_subida . basename($data->archivo['name']);

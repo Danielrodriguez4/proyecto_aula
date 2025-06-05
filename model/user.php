@@ -1,4 +1,7 @@
 <?php
+require_once 'informacionpersonal.php';
+
+
 class User
 {
 	private $pdo;
@@ -19,7 +22,7 @@ class User
 	}
 
 
-	public function Obtener($username)
+   public function Obtener($username)
 	{
 		try {
 			$stm = $this->pdo
@@ -45,56 +48,63 @@ class User
 		}
 	}
 
+public function Registrar(User $data) {
+    try {
+        $password_hash = ($data->rol == 2) 
+			? md5($data->password)  
+			: md5($data->password); 
+
+        $stmt = $this->pdo->prepare("INSERT INTO user (username, password, rol) VALUES (?, ?, ?)");
+        $stmt->execute([
+            $data->username,
+            $password_hash,
+            $data->rol ?? 2
+        ]);
+
+        return $this->Obtener($data->username);
+    } catch (Exception $e) {
+        error_log("Error en registro: " . $e->getMessage());
+        return false;
+    }
+}
+
+   public function Verificar($username, $password) {
+    try {
+        $user = $this->Obtener($username);
+        if (!$user) return false;
+
+        // Intento 1: Verificar con contraseña proporcionada
+        if (hash_equals($user->password, md5($password))) {
+            return $user;
+        }
+
+        // Intento 2: Solo para estudiantes - verificar con num_id
+        if ($user->rol == 2) {
+            $info = (new InformacionPersonal())->ObtenerPorUsuario($user->id);
+            if ($info && hash_equals($user->password, md5($info->num_id))) {
+                return $user;
+            }
+        }
+
+        return false;
+    } catch (Exception $e) {
+        error_log("Error en verificación: " . $e->getMessage());
+        return false;
+    }
+}
 
 
-	public function Registrar(User $data)
-	{
-		try {
-			$sql = "INSERT INTO user (username,password,rol) 
-		        VALUES (?, ?, 2);";
-
-			$this->pdo->prepare($sql)
-				->execute(
-					array(
-						$data->correo,
-						md5($data->password),
-					)
-				);
-				$stm = $this->Obtener($data->correo);
-			$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,user) 
-		        VALUES (?,?,?,?,?,?,?,?,?);";
-
-			$this->pdo->prepare($sql)
-				->execute(
-					array(
-						$data->nombre,
-						$data->apellido,
-						$data->num_id,
-						$data->codigo,
-						$data->semestre,
-						$data->telefono,
-						$data->sexo,
-						$data->correo,
-						$stm->id
-						
-					)
-				);
-			return $stm;
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-
-	public function Verificar($username, $password)
+public function ObtenerPorCorreo($correo)
 	{
 		try {
 			$stm = $this->pdo
-				->prepare("SELECT * FROM user WHERE username = ? AND password = ?");
-
-			$stm->execute(array($username, md5($password)));
+				->prepare("SELECT * FROM user WHERE username = ?");
+			$stm->execute(array($correo));
 			return $stm->fetch(PDO::FETCH_OBJ);
 		} catch (Exception $e) {
 			die($e->getMessage());
 		}
 	}
 }
+	
+	

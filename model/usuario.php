@@ -12,6 +12,7 @@ class Usuario
     public $telefono;
     public $sexo;
     public $correo;
+    public $cargo;
     public $fechaRegistro;
 
 	public function __CONSTRUCT()
@@ -89,6 +90,7 @@ class Usuario
 						telefono         = ?,
                         sexo			 = ?,
                         correo        = ?
+                        cargo        = ?
 				    WHERE id = ? AND user = ?";
 
 			$this->pdo->prepare($sql)
@@ -102,6 +104,7 @@ class Usuario
                         $data->telefono, 
                         $data->sexo, 
                         $data->correo,
+                        $data->cargo,
                         $data->id,
 						$_SESSION['user']->id 
 					)
@@ -112,52 +115,50 @@ class Usuario
 		}
 	}
 
-	public function Obtener_Codigo($codigo)
-	{
-		try 
-		{
-			$stm = $this->pdo
-			          ->prepare("SELECT * FROM usuarios WHERE codigo = ?");
-			          
-
-			$stm->execute(array($codigo));
-			return $stm->fetch(PDO::FETCH_OBJ);
-		} catch (Exception $e) 
-		{
-			die($e->getMessage());
-		}
-	}
+	public function ObtenerPorCorreo($correo)
+{
+    try {
+        $stm = $this->pdo->prepare("SELECT * FROM usuarios WHERE correo = ?");
+        $stm->execute(array($correo));
+        return $stm->fetch(PDO::FETCH_OBJ);
+    } catch (Exception $e) {
+        error_log("Error en Usuario::ObtenerPorCorreo: " . $e->getMessage());
+        return false;
+    }
+}
 
 	public function Registrar(Usuario $data)
-	{
-		try 
-		{
-		$sql = "INSERT INTO usuarios (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,user) 
-		        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+{
+    try 
+    {
+        $sql = "INSERT INTO usuarios (nombre, apellido, num_id, codigo, semestre, telefono, sexo, correo, cargo, user) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // 10 placeholders ahora
 
-		$this->pdo->prepare($sql)
-		     ->execute(
-				array(
-                    	$data->nombre,
-                        $data->apellido,
-                        $data->num_id,
-                        $data->codigo,
-                        $data->semestre,
-                        $data->telefono, 
-                        $data->sexo,
-                        $data->correo,
-						$_SESSION['user']->id 
+        $this->pdo->prepare($sql)
+             ->execute(
+                array(
+                    $data->nombre,
+                    $data->apellido,
+                    $data->num_id,
+                    $data->codigo,
+                    $data->semestre,
+                    $data->telefono, 
+                    $data->sexo,
+                    $data->correo,
+                    $data->cargo,
+                    $data->user // Usamos $data->user en lugar de $_SESSION['user']->id
                 )
-			);
-			$student = new Usuario();
-			$student = $this->Obtener_Codigo($data->codigo);
-			$this->Registrar_Proyecto($data->proyecto, $student->id);
-		} catch (Exception $e) 
-		{
-			die($e->getMessage());
-		}
-	}
-
+            );
+            
+        $student = new Usuario();
+        $student = $this->Obtener_Codigo($data->codigo);
+        $this->Registrar_Proyecto($data->proyecto, $student->id);
+    } 
+    catch (Exception $e) 
+    {
+        throw new Exception("Error al registrar usuario: " . $e->getMessage());
+    }
+}
 	public function Registrar_Proyecto($id_proyecto, $id_usuario)
 	{
 		try{

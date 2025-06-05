@@ -45,9 +45,7 @@
           </div>
         </div>
       </form>
-      <p class="mb-0">
-        <a style="color: white;" href="?c=registro" class="text-center">Registrarse</a>
-      </p>
+      
     </div>
   </div>
 </div>

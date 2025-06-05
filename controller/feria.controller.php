@@ -1,6 +1,6 @@
 <?php
 require_once 'model/feria.php';
-require_once 'model/evaluador.php';
+require_once 'model/docente.php';
 require_once 'model/usuario.php';
 
 
@@ -20,7 +20,7 @@ class FeriaController{
     
     public function Editar(){
         $alm = new Feria();
-        $docentes = new Evaluador();
+        $docentes = new Docente();
 
         if(isset($_REQUEST['id'])){
             $alm = $this->model->Obtener($_REQUEST['id']);
@@ -38,13 +38,13 @@ class FeriaController{
         $alm->nom_cur = $_REQUEST['nom_cur'];
         $alm->doc_ori = $_REQUEST['doc_ori'];
         $alm->tiem_eje = $_REQUEST['tiem_eje'];
-        $alm->fecha_entrega = $_REQUEST['fecha_entrega'];
-        $alm->fecha_fin = $_REQUEST['fecha_fin'];
+        $alm->fecha_entrega = !empty($_POST['fecha_entrega']) ? $_POST['fecha_entrega'] : null;
+        $alm->fecha_fin = !empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null;
         $alm->est_por = $_REQUEST['est_por'];
         $alm->tip_pro = $_REQUEST['tip_pro'];
         $alm->archivo = $_FILES['archivo'];
         $alm->comentario = $_REQUEST['comentario'];
-        $alm->director = $_REQUEST['jurado'];
+        $alm->jurado = $_REQUEST['jurado'];
         $alm->nota = $_REQUEST['nota'];
         $alm->estado = $_REQUEST['estado'];
         $alm->user = $_SESSION['user']->id;

@@ -2,14 +2,8 @@
 class Convocatoria
 {
 	private $pdo;
-	private $dir_subida = './files/uploads/';
 
-	public $nombre;
-	public $imagen;
-	public $apertura;
-    
-
-    public function __CONSTRUCT()
+        public function __CONSTRUCT()
 	{
 		try {
 			$this->pdo = Database::StartUp();
@@ -17,99 +11,61 @@ class Convocatoria
 			die($e->getMessage());
 		}
 	}
-
-    public function Obtener($id)
+	public function Listar()
 	{
-		try {
-			$stm = $this->pdo
-				->prepare("SELECT * FROM convocatorias WHERE id = ?");
-
-
-			$stm->execute(array($id));
-			return $stm->fetch(PDO::FETCH_OBJ);
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-
-	public function Eliminar($id)
-	{
-		try {
-			$stm = $this->pdo
-				->prepare("DELETE FROM convocatorias WHERE id = ?");
-
-			$stm->execute(array($id));
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
-
-	public function Actualizar($data)
-	{
-		try {
-			$sql = "UPDATE convocatoria SET 
-
-					nombre =?,
-					imagen =?,
-					apertura	=?,
-				    WHERE id = ?";
-			if ($data->imagen['imagen']) {
-				$fichero_subido = $this->dir_subida . basename($data->imagen['imagen']);
-				if (move_uploaded_file($data->imagen['tmp_name'], $fichero_subido)) {
-					$datos = array(
-						
-						$data->nombre,
-						$fichero_subido,
-						$data->apertura,
-
-					);
-				}
+		try
+		{$result = array();
+			if ($_SESSION['user']->rol == 1) {
+				$stm = $this->pdo->prepare("SELECT * FROM convocatorias");
+				$stm->execute();
 			} else {
-				$sql = "UPDATE convocatoria SET 
-					
-					nombre	=?,
-					apertura	=?,
-					
-				    WHERE id = ?";
-
-				$datos = array(
-						
-					$data->nombre,
-					$data->apertura,
-						
-				);
+				$stm = $this->pdo->prepare("SELECT * FROM convocatorias WHERE user = ?");
+				$stm->execute(array($_SESSION['user']->id));
 			}
 
-			$this->pdo->prepare($sql)
-				->execute(
-					$datos
-				);
-		} catch (Exception $e) {
+			return $stm->fetchAll(PDO::FETCH_OBJ);
+		}
+		catch(Exception $e)
+		{
 			die($e->getMessage());
 		}
 	}
 
-	public function Registrar(Convocatoria $data)
-	{
-		try {
-			$sql = "INSERT INTO convocatorias (nombre,imagen,apertura,user) 
-		        VALUES (?, ?, ?, ?)";
+    // Obtener convocatoria por ID
+    public function Obtener($id)
+    {
+        try {
+            $stm = $this->pdo->prepare("SELECT * FROM convocatorias WHERE id = ?");
+            $stm->execute([$id]);
+            return $stm->fetch(PDO::FETCH_OBJ);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
 
-			$fichero_subido = $this->dir_subida . basename($data->imagen['imagen']);
-			if (move_uploaded_file($data->imagen['tmp_name'], $fichero_subido)) {
-			}
-			$this->pdo->prepare($sql)
-				->execute(
-					array(
-						$data->nombre,
-						$fichero_subido,
-						$data->apertura,
-						$data->user
-					)
-				);
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
+    // Guardar nueva convocatoria
+    public function Guardar($data)
+{
+    $sql = "INSERT INTO convocatorias (nombre, picture, apertura, cierre, user) VALUES (?, ?, ?, ?, ?)";
+    $this->pdo->prepare($sql)->execute([
+        $data->nombre,
+        $data->picture,
+        $data->apertura,
+        $data->cierre,
+        $data->user
+    ]);
+}
+
+public function Actualizar($data)
+{
+    $sql = "UPDATE convocatorias SET nombre = ?, picture = ?, apertura = ?, cierre = ? WHERE id = ?";
+    $this->pdo->prepare($sql)->execute([
+        $data->nombre,
+        $data->picture,
+        $data->apertura,
+        $data->cierre,
+        $data->id
+    ]);
+}
 
 }

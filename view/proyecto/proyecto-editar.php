@@ -14,7 +14,7 @@
                 <div class="card-tools">
                     <div class="input-group input-group-sm">
                     <?php
-                        if ($_SESSION['user']->rol == 2) {
+                        if ($_SESSION['user']->rol == 3) {
                             echo '<a href="?c=usuarios&a=Crud&p='. $alm->id .'"  style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Estudiante</a>';
                         }
                         ?>   
@@ -26,8 +26,23 @@
                     <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
 
                     <div class="form-group">
+                        <label>Grupo</label>
+                        <input type="text" name="grupo" value="<?php echo $alm->grupo; ?>" class="form-control" placeholder="Ingrese el grupo del proyecto" data-validacion-tipo="requerido|min:3" />
+                    </div>
+
+                    <div class="form-group">
+                            <label>Asignatura</label>
+                            <select name="asignatura" class="custom-select">
+                                <option value="">Seleccione Asignatura</option>
+                                <?php foreach ($docentes->Listar() as $docente) : ?>
+                                    <option <?php echo $alm->jurado == $docente->id ? 'selected' : ''; ?> value="<?php echo $docente->id; ?>"><?php echo $docente->nombre; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                    </div>
+
+                    <div class="form-group">
                         <label>Titulo</label>
-                        <input type="text" name="title" value="<?php echo $alm->titulo; ?>" class="form-control" placeholder="Ingrese Titulo del proyecto" data-validacion-tipo="requerido|min:3" />
+                        <input type="text" name="titulo" value="<?php echo $alm->titulo; ?>" class="form-control" placeholder="Ingrese Titulo del proyecto" data-validacion-tipo="requerido|min:3" />
                     </div>
 
                     <div class="form-group">
@@ -35,12 +50,7 @@
                         <input type="number" name="num_est" value="<?php echo $alm->num_est; ?>" class="form-control" placeholder="Ingrese la Numero de Estudiantes del Proyecto" data-validacion-tipo="requerido|min:10" />
                     </div>
                     <?php
-                    if ($_SESSION['user']->rol == 2) {
-                    ?><div class="form-group">
-                            <a style="border-color:white; background-color:#b90606; color:black;" target="_blank" class="btn btn-outline-primary btn-block" href="<?php echo $alm->archivo ?>">Descargar proyecto</a>
-                        </div>
-                    <?php
-                    } else {
+                    if (($_SESSION['user']->rol == 1)||($_SESSION['user']->rol == 3)) {
                     ?><div class="form-group">
                             <p><strong>Archivo actual: </strong><?php echo $alm->archivo ?></p>
                         </div>
@@ -52,6 +62,11 @@
                             </div>
                         </div>
                     <?php
+                    } else {
+                    ?><div class="form-group">
+                            <a style="border-color:white; background-color:#b90606; color:black;" target="_blank" class="btn btn-outline-primary btn-block" href="<?php echo $alm->archivo ?>">Descargar proyecto</a>
+                        </div>
+                    <?php
                     }
                     ?>
                     <?php
@@ -60,8 +75,8 @@
                             <label>Docente</label>
                             <select name="jurado" class="custom-select">
                                 <option value="">Seleccione Docente</option>
-                                <?php foreach ($docentes->Listar() as $docente) : ?>
-                                    <option <?php echo $alm->jurado == $docente->id ? 'selected' : ''; ?> value="<?php echo $docente->id; ?>"><?php echo $docente->nombre; ?></option>
+                                <?php foreach ($docentes->Listar() as $docentes) : ?>
+                                    <option <?php echo $alm->docentes == $docentes->id ? 'selected' : ''; ?> value="<?php echo $docentes->id; ?>"><?php echo $docentes->nombre; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -69,26 +84,19 @@
                     <?php
                     ?>
                         <div class="form-group">
-                            <label>Asignatura</label>
-                            <select name="jurado" class="custom-select">
-                                <option value="">Seleccione Docente</option>
-                                <?php foreach ($docentes->Listar() as $docente) : ?>
-                                    <option <?php echo $alm->jurado == $docente->id ? 'selected' : ''; ?> value="<?php echo $docente->id; ?>"><?php echo $docente->nombre; ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label>Fecha de entrega: <?php echo $alm->fecha_entrega; ?></label>
+                            <input type="date" name="fecha_entrega" value="<?php echo htmlspecialchars($alm->fecha_entrega); ?>" class="form-control" />
                         </div>
 
                 </div>
-            <div class="card-footer">
+                <div class="card-footer">
                 <div class="text-right">
                     <?php
                     if ($_SESSION['user']->rol == 1) {
                     ?> <div class="form-group">
-                            <button name='estado' value='2' type="submit" class="btn btn-warning">Revisado</button>
+                            <button name='estado' value='2' type="submit" class="btn btn-warning">Aprobado</button>
 
-                            <button name='estado' value='3' type="submit" class="btn btn-success">Aprobado</button>
-
-                            <button name='estado' value='4' type="submit" class="btn btn-danger">Finalizado</button>
+                            <button name='estado' value='3' type="submit" class="btn btn-success">Finalizado</button>
 
                         </div>
                     <?php
@@ -101,7 +109,7 @@
                     }
                     ?>
                 </div>
-            </div>
+                </div>                    
             </form>
         </div>
     </div>

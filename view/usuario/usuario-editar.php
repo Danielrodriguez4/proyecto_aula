@@ -62,8 +62,15 @@
                         <label>Correo</label>
                         <input type="email" name="correo" value="<?php echo $alm->correo; ?>"class="form-control" placeholder="Correo">
                     </div>
-
+                    <div class="form-group">
+                    <label>Cargo</label>
+                    <select name="cargo" class="form-control">
+                        <option value="1" selected>Lider</option>
+                        <option value="1" selected>Colaborador</option>
+                    </select>
                 </div>
+            </div>
+                
                 <div class="card-footer">
                     <div class="text-right">
                         <button type="submit" class="btn btn-success">Guardar</button>

@@ -10,68 +10,50 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            
-            <form id="frm-convocatoria" action="?c=Convocatorias&a=Guardar" method="post" enctype="multipart/form-data">
-                <div class="card-body">
-                    <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
-
-                    <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" value="<?php echo $alm->nombre; ?>" class="form-control" placeholder="Ingrese Titulo de la Convocatoria" data-validacion-tipo="requerido|min:3" />
-                     </div>
-
-                    <div class="form-group">
-                            <p><strong>Imagen actual: </strong><?php echo $alm->imagen ?></p>
-                        </div>
-                        <div class="input-group">
-
-                            <div class="custom-file">
-                                <input type="file" name="imagen" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Seleccione la imagen</label>
-                            </div>
-                        </div>
-                    
-                    <div class="form-group">
-                        <label>Fecha de Apertura de la Convocatoria</label>
-                        <input type="date" name="apertura" value="<?php echo $alm->apertura; ?>" class="form-control" placeholder="Ingrese Fecha de Apertura a la convocatoria" data-validacion-tipo="requerido|min:3" />
+            <div class="card-header">
+                <div class="card-tools">
+                    <div class="input-group input-group-sm">
+                    <?php
+                        if ($_SESSION['user']->rol == 1) {
+                            echo '<a href="?c=usuarios&a=Crud&p='. $alm->id .'"  style="border-color:white; background-color:#b90606;" class="btn btn-primary btn-block"><i class="fa fa-plus"></i>Agregar Estudiante</a>';
+                        }
+                        ?>   
                     </div>
-                        
-
-                </div>
-            <div class="card-footer">
-                <div class="text-right">
-                    <div class="form-group">
-                            <button name='estado' value='1' type="submit" class="btn btn-success">Guardar</button>
-
-                    </div>
-                    
                 </div>
             </div>
-            </form>
-        </div>
-    </div>
-</div>
+            <form action="?c=Convocatorias&a=Guardar" method="post" enctype="multipart/form-data">
+    <div class="card-body">
+        <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
+        <input type="hidden" name="imagen" value="<?php echo $alm->imagen; ?>" />
 
-            <script>
-            $(function () {
-                $("#example1").DataTable({
-                "responsive": true, "lengthChange": false, "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-                }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-                $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                });
-            });
-            </script>
+         <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" value="<?php echo $alm->nombre ?? ''; ?>" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Imagen (Picture)</label>
+            <input type="file" name="picture" class="form-control">
+            <?php if (!empty($alm->picture)): ?>
+                <img src="assets/convocatorias/<?php echo $alm->picture; ?>" width="150">
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de Apertura</label>
+            <input type="date" name="apertura" value="<?php echo $alm->apertura ?? ''; ?>" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de Cierre</label>
+            <input type="date" name="cierre" value="<?php echo $alm->cierre ?? ''; ?>" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </form>
 
 <script>
-    $(function() {
+    $(function () {
         bsCustomFileInput.init();
     });
 </script>

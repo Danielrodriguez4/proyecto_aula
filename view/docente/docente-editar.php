@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Evaluadores</h1>
+                <h1>Docente</h1>
             </div>
         </div>
     </div>
@@ -11,9 +11,9 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><?php echo $alm->id != null ? $alm->nombre : 'Registro de un Nuevo Evaluador'; ?></h3>
+                <h3 class="card-title"><?php echo $alm->id != null ? $alm->nombre : 'Registro de un Nuevo Docente'; ?></h3>
             </div>
-            <form id="frm-docente" action="?c=evaluadores&a=Guardar" method="post" enctype="multipart/form-data">
+           <form id="frm-proyecto" action="?c=Docentes&a=Guardar" method="post" enctype="multipart/form-data">
                 <div class="card-body">
                     <input type="hidden" name="id" value="<?php echo $alm->id; ?>" />
 
@@ -33,15 +33,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Correo</label>
-                        <input type="text" name="correo" value="<?php echo $alm->correo; ?>" class="form-control" placeholder="Ingrese correo" data-validacion-tipo="requerido|min:10" />
+                        <label>Correo  Institucional</label>
+                        <input type="email" name="correo" value="<?php echo $alm->correo; ?>" class="form-control" required placeholder="correo@ufps.edu.co">
                     </div>
 
                     <div class="form-group">
                         <label>Cargo</label>
                         <select name="cargo" class="form-control">
-                            <option value="1" selected>Director</option>
-                            <option value="2">Jurado</option>
+                            <option value="1" selected>Jurado</option>
                         </select>
                     </div>
                 </div>

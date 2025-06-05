@@ -4,6 +4,7 @@ class Feria
 	private $pdo;
 	private $dir_subida = './files/uploads/';
 
+	public $id;
 	public $nom_cur;
 	public $doc_ori;
 	public $tiem_eje;
@@ -36,21 +37,54 @@ class Feria
 	public function Listar($table_search)
 	{
 		try {
-			$result = array();
 			if ($_SESSION['user']->rol == 1) {
 				if ($table_search) {
-					$stm = $this->pdo->prepare("SELECT * FROM ferias WHERE titulo LIKE '%" .$table_search."%'" );
+					$stm = $this->pdo->prepare("
+						SELECT f.*, 
+							doc_ori.nombre AS doc_ori_nombre, doc_ori.apellido AS doc_ori_apellido,
+							jur.nombre AS jurado_nombre, jur.apellido AS jurado_apellido
+						FROM ferias f 
+						LEFT JOIN docentes doc_ori ON f.doc_ori = doc_ori.id 
+						LEFT JOIN docentes jur ON f.jurado = jur.id 
+						WHERE f.nom_cur LIKE ?
+					");
+					$stm->execute(["%$table_search%"]);
 				} else {
-					$stm = $this->pdo->prepare("SELECT * FROM ferias WHERE estado != 4");
-				} 
-				$stm->execute();
+					$stm = $this->pdo->prepare("
+						SELECT f.*, 
+							doc_ori.nombre AS doc_ori_nombre, doc_ori.apellido AS doc_ori_apellido,
+							jur.nombre AS jurado_nombre, jur.apellido AS jurado_apellido
+						FROM ferias f 
+						LEFT JOIN docentes doc_ori ON f.doc_ori = doc_ori.id 
+						LEFT JOIN docentes jur ON f.jurado = jur.id 
+						WHERE f.estado != 4
+					");
+					$stm->execute();
+				}
 			} else {
 				if ($table_search) {
-					$stm = $this->pdo->prepare("SELECT * FROM ferias WHERE user = ? AND titulo LIKE '%" .$table_search."%'" );
+					$stm = $this->pdo->prepare("
+						SELECT f.*, 
+							doc_ori.nombre AS doc_ori_nombre, doc_ori.apellido AS doc_ori_apellido,
+							jur.nombre AS jurado_nombre, jur.apellido AS jurado_apellido
+						FROM ferias f 
+						LEFT JOIN docentes doc_ori ON f.doc_ori = doc_ori.id 
+						LEFT JOIN docentes jur ON f.jurado = jur.id 
+						WHERE f.user = ? AND f.nom_cur LIKE ?
+					");
+					$stm->execute([$_SESSION['user']->id, "%$table_search%"]);
 				} else {
-					$stm = $this->pdo->prepare("SELECT * FROM ferias WHERE user = ?");
-				} 
-				$stm->execute(array($_SESSION['user']->id));
+					$stm = $this->pdo->prepare("
+						SELECT f.*, 
+							doc_ori.nombre AS doc_ori_nombre, doc_ori.apellido AS doc_ori_apellido,
+							jur.nombre AS jurado_nombre, jur.apellido AS jurado_apellido
+						FROM ferias f 
+						LEFT JOIN docentes doc_ori ON f.doc_ori = doc_ori.id 
+						LEFT JOIN docentes jur ON f.jurado = jur.id 
+						WHERE f.user = ?
+					");
+					$stm->execute([$_SESSION['user']->id]);
+				}
 			}
 
 			return $stm->fetchAll(PDO::FETCH_OBJ);
@@ -58,6 +92,8 @@ class Feria
 			die($e->getMessage());
 		}
 	}
+
+
 
 	public function Obtener($id)
 	{
@@ -86,108 +122,77 @@ class Feria
 	}
 
 	public function Actualizar($data)
-	{
-		try {
-			$sql = "UPDATE feria SET 
+{
+    try {
+        // Validar fechas
+        $fecha_entrega = !empty($data->fecha_entrega) ? $data->fecha_entrega : null;
+        $fecha_fin = !empty($data->fecha_fin) ? $data->fecha_fin : null;
 
-					nom_cur =?,
-					doc_ori	=?,
-					tiem_eje =?,
-					fecha_entrega =?,
-					fecha_fin =?,
-					est_por =?,
-					tip_pro =?,
-					archivo =?,
-					comentario =?,
-					jurado =?,
-					nota =?,
-					estado =?,
-					nombre =?,
-					num_id =?,
-					codigo =?,
-					semestre =?,
-					correo =?,
-					telefono =?
-				    WHERE id = ?";
-			if ($data->archivo['name']) {
-				$fichero_subido = $this->dir_subida . basename($data->archivo['name']);
-				if (move_uploaded_file($data->archivo['tmp_name'], $fichero_subido)) {
-					$datos = array(
-						
-						$data->nom_cur,
-						$data->doc_ori,
-						$data->tiem_eje,
-						$data->fecha_entrega,
-						$data->fecha_fin,
-						$data->est_por,
-						$data->tip_pro,
-						$data->archivo,
-						$data->comentario,
-						$data->jurado,
-						$data->nota,
-						$data->estado,
-						$data->nombre,
-						$data->num_id,
-						$data->codigo,
-						$data->semestre,
-						$data->correo,
-						$data->telefono
-					);
-				}
-			} else {
-				$sql = "UPDATE feria SET 
-					nom_cur =?,
-					doc_ori	=?,
-					tiem_eje =?,
-					fecha_entrega =?,
-					fecha_fin =?,
-					est_por =?,
-					tip_pro =?,
-					archivo =?,
-					comentario =?,
-					jurado =?,
-					nota =?,
-					estado =?,
-					nombre =?,
-					num_id =?,
-					codigo =?,
-					semestre =?,
-					correo =?,
-					telefono =? 
+        // Si hay archivo nuevo
+        if (!empty($data->archivo['name'])) {
+            $fichero_subido = $this->dir_subida . basename($data->archivo['name']);
+            if (move_uploaded_file($data->archivo['tmp_name'], $fichero_subido)) {
+                $sql = "UPDATE ferias SET 
+                    nom_cur = ?, 
+                    doc_ori = ?, 
+                    tiem_eje = ?, 
+                    est_por = ?, 
+                    tip_pro = ?, 
+                    archivo = ?, 
+                    comentario = ?, 
+                    jurado = ?, 
+                    nota = ?, 
+                    estado = ?
+                WHERE id = ?";
 
-				    WHERE id = ?";
+                $datos = [
+                    $data->nom_cur,
+                    $data->doc_ori,
+                    $data->tiem_eje,
+                    $data->est_por,
+                    $data->tip_pro,
+                    $fichero_subido,
+                    $data->comentario,
+                    $data->jurado,
+                    $data->nota ?? 0,
+                    $data->estado,
+                    $data->id
+                ];
+            }
+        } else {
+            // Sin nuevo archivo
+            $sql = "UPDATE ferias SET 
+                nom_cur = ?, 
+                doc_ori = ?, 
+                tiem_eje = ?,  
+                est_por = ?, 
+                tip_pro = ?, 
+                comentario = ?, 
+                jurado = ?, 
+                nota = ?, 
+                estado = ?
+            WHERE id = ?";
 
-				$datos = array(
-						$data->nom_cur,
-						$data->doc_ori,
-						$data->tiem_eje,
-						$data->fecha_entrega,
-						$data->fecha_fin,
-						$data->est_por,
-						$data->tip_pro,
-						$data->archivo,
-						$data->comentario,
-						$data->jurado,
-						$data->nota ? $data->nota : 0,
-						$data->estado,
-						$data->nombre,
-						$data->num_id,
-						$data->codigo,
-						$data->semestre,
-						$data->correo,
-						$data->telefono
-					
-				);
-			}
+            $datos = [
+                $data->nom_cur,
+                $data->doc_ori,
+                $data->tiem_eje,
+                $data->est_por,
+                $data->tip_pro,
+                $data->comentario,
+                $data->jurado,
+                $data->nota ?? 0,
+                $data->estado,
+                $data->id
+            ];
+        }
 
-			$this->pdo->prepare($sql)
-				->execute(
-					$datos
-				);
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-	}
+        // Ejecutar la consulta
+        $this->pdo->prepare($sql)->execute($datos);
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+}
 
 	public function Registrar(Feria $data)
 	{
@@ -208,7 +213,7 @@ class Feria
 						$data->fecha_fin,
 						$data->est_por,
 						$data->tip_pro,
-						$data->archivo,
+						$fichero_subido,
 						$data->user
 					)
 				);

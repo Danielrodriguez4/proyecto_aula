@@ -45,6 +45,18 @@ class InformacionPersonal
 		}
 	}
 
+	public function ObtenerPorUsuario($userId)
+{
+    try {
+        $stm = $this->pdo->prepare("SELECT * FROM informacionpersonal WHERE user = ?");
+        $stm->execute(array($userId));
+        return $stm->fetch(PDO::FETCH_OBJ);
+    } catch (Exception $e) {
+        error_log("Error en InformacionPersonal::ObtenerPorUsuario: " . $e->getMessage());
+        return false;
+    }
+}
+
 	public function Eliminar($id)
 	{
 		try 
@@ -94,30 +106,41 @@ class InformacionPersonal
 		}
 	}
 
-	public function Registrar(Estudiantes $data)
-	{
-		try 
-		{
-		$sql = "INSERT INTO informacionpersonal (nombre,apellido,num_id,codigo,semestre,telefono,sexo,correo,fecha_registro) 
-		        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public function ObtenerPorCorreo($correo)
+{
+    try {
+        $stm = $this->pdo->prepare("SELECT * FROM informacionpersonal WHERE correo = ?");
+        $stm->execute(array($correo));
+        return $stm->fetch(PDO::FETCH_OBJ);
+    } catch (Exception $e) {
+        error_log("Error en InformacionPersonal::ObtenerPorCorreo: " . $e->getMessage());
+        return false;
+    }
+}
 
-		$this->pdo->prepare($sql)
-		     ->execute(
-				array(
-                    $data->nombre,
-                    $data->apellido,
-                    $data->num_id,
-                    $data->codigo,
-                    $data->semestre,  
-                    $data->telefono,
-                    $data->sexo,
-                    $data->correo,
-                    $data->fecha_registro,
-                )
-			);
-		} catch (Exception $e) 
-		{
-			die($e->getMessage());
+public function Registrar($data)
+	{
+		try {
+			$sql = "INSERT INTO informacionpersonal 
+					(nombre, apellido, num_id, codigo, semestre, telefono, sexo, correo, user) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+			$this->pdo->prepare($sql)->execute([
+				$data->nombre,
+				$data->apellido,
+				$data->num_id,
+				$data->codigo,
+				$data->semestre,
+				$data->telefono,
+				$data->sexo,
+				$data->correo,
+				$data->user
+			]);
+
+			return true;
+		} catch (Exception $e) {
+			error_log("Error en InformacionPersonal::Registrar: ".$e->getMessage());
+			throw $e;
 		}
 	}
 }

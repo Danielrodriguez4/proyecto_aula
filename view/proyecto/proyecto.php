@@ -50,13 +50,18 @@
                     <tbody>
                         <?php foreach ($this->model->Listar($_REQUEST['table_search']) as $r) : ?>
                             <tr>
+                                <td><?php echo $r->grupo; ?></td>
                                 <td><?php echo $r->asignatura; ?></td>
                                 <td><?php echo $r->titulo; ?></td>
                                 <td><?php echo $r->num_est; ?></td>
-                                <td><?php ?>
-                                <div class="form-group">
-                                        <a style="border-color:white; background-color:#b90606; color:black;" target="_blank" class="btn btn-outline-primary btn-block" href="<?php echo $alm->archivo ?>">Descargar proyecto</a>
-                                    </div>
+                                <td><?php
+                                    if (($_SESSION['user']->rol == 1)||($_SESSION['user']->rol == 3)) {
+                                    ?><div class="form-group">
+                                            <a style="border-color:white; background-color:#b90606; color:black;" target="_blank" class="btn btn-outline-primary btn-block" href="<?php echo $alm->archivo ?>">Descargar proyecto</a>
+                                        </div>
+                                    <?php
+                                    } 
+                                    ?>
                                 </td>
                                 <td>
                                     <?php

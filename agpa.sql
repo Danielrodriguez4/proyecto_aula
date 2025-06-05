@@ -1,4 +1,4 @@
-create table if not exists evaluadores
+create table if not exists docentes
 (
 	id int auto_increment,
 	codigo int not null,
@@ -10,9 +10,9 @@ create table if not exists evaluadores
 		unique (codigo),
 	constraint docentes_id_uindex
 		unique (id)
-);
+)CHARSET=utf8mb4;
 
-alter table evaluadores
+alter table docentes
 	add primary key (id);
 
 create table if not exists historial
@@ -30,7 +30,7 @@ create table if not exists historial
 	nota int null,
 	constraint historial_id_uindex
 		unique (id)
-);
+)CHARSET=utf8mb4;
 
 alter table historial
 	add primary key (id);
@@ -45,7 +45,7 @@ create table if not exists user
 		unique (id),
 	constraint user_username_uindex
 		unique (username)
-);
+)CHARSET=utf8mb4;
 
 alter table user
 	add primary key (id);
@@ -65,28 +65,30 @@ create table if not exists informacionpersonal
 	user int not null,
 	constraint informacionpersonal_user_id_fk
 		foreign key (user) references user (id)
-);
+)CHARSET=utf8mb4;
 
 create table if not exists proyectos
 (
 	id int(10) auto_increment
 		primary key,
+	grupo int not null,
+	asignatura varchar(200) not null,
 	titulo varchar(100) not null,
-	descripcion varchar(200) not null,
-	fecha_entrega datetime default CURRENT_TIMESTAMP not null,
-	user int not null,
-	comentario text null,
+	num_est int not null,
 	archivo longtext not null,
 	estado int default 1 null,
-	director int null,
-	jurado1 text null,
-	jurado2 text null,
-	jurado3 text null,
-	nota int default 0 null,
+	fecha_entrega datetime default CURRENT_TIMESTAMP not null,
+	user int not null,
+	docente int null,
+	constraint fk_proyecto_asignatura 
+		foreign key (asignatura_id) references asignaturas (id) 
+		on delete restrict on update cascade,
 	constraint proyectos_docentes_id_fk
-		foreign key (director) references evaluadores (id),
+		foreign key (docente_id) references docentes (id) 
+		on delete set null on update cascade,
 	constraint proyectos_user_id_fk
-		foreign key (user) references user (id)
+		foreign key (user_id) references user (id)
+		on delete set cascade on update cascade
 )
 charset=utf8mb4;
 
@@ -108,7 +110,7 @@ create table if not exists usuarios
 		unique (id),
 	constraint estudiantes_user_id_fk
 		foreign key (user) references user (id)
-);
+)CHARSET=utf8mb4;
 
 alter table usuarios
 	add primary key (id);
@@ -124,7 +126,7 @@ create table if not exists proyecto_usuario
 		foreign key (id_estudiante) references usuarios (id),
 	constraint proyecto_estudiante_proyectos_id_fk
 		foreign key (id_proyecto) references proyectos (id)
-);
+)CHARSET=utf8mb4;
 
 alter table proyecto_usuario
 	add primary key (id);
@@ -137,8 +139,8 @@ create table if not exists ferias
 	nom_cur varchar(100) not null,
 	doc_ori varchar(200) not null,
 	tiem_eje varchar(50) not null,
-	fecha_entrega datetime default CURRENT_TIMESTAMP not null,
-	fecha_fin datetime default CURRENT_TIMESTAMP not null,
+	fecha_entrega DATETIME NULL,
+    fecha_fin DATETIME NULL,
 	est_por float not null,
 	tip_pro int null,
 	archivo longtext not null,
@@ -149,7 +151,7 @@ create table if not exists ferias
 	user int not null,
 	director int null,
 	constraint ferias_docentes_id_fk
-		foreign key (director) references evaluadores (id),
+		foreign key (director) references docentes (id),
 	constraint ferias_user_id_fk
 		foreign key (user) references user (id)
 )
@@ -166,7 +168,38 @@ create table if not exists feria_usuario
 		foreign key (id_estudiante) references usuarios (id),
 	constraint feria_estudiante_ferias_id_fk
 		foreign key (id_feria) references ferias (id)
-);
+)CHARSET=utf8mb4;
 
 alter table feria_usuario
 	add primary key (id);
+
+CREATE TABLE IF NOT EXISTS convocatorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    picture  VARCHAR(255) NULL,
+    apertura DATE NOT NULL,
+    cierre DATE NOT NULL,
+    user INT NOT NULL,
+    FOREIGN KEY (user) REFERENCES user(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS asignaturas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL UNIQUE,
+    nombre VARCHAR(255) NOT NULL
+)CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS docente_asignatura (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    docente_id INT NOT NULL,
+    asignatura_id INT NOT NULL,
+    FOREIGN KEY (docente_id) REFERENCES docentes(id),
+    FOREIGN KEY (asignatura_id) REFERENCES asignaturas(id),
+    UNIQUE KEY (docente_id, asignatura_id)
+)CHARSET=utf8mb4;
+
+
+INSERT INTO user (username, password, rol) 
+VALUES ('ingsistemas@ufps.edu.co', MD5('115Sistemas'), 1)
+ON DUPLICATE KEY UPDATE password = VALUES(password);

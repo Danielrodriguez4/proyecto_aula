@@ -99,10 +99,10 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a style="color: white;" href="/?c=evaluadores" class="nav-link">
+                    <a style="color: white;" href="/?c=docentes" class="nav-link">
                       <i class="nav-icon fas fa-folder"></i>
                       <p>
-                        Evaluadores
+                        Docentes
                       </p>
                     </a>
                   </li>
@@ -138,6 +138,50 @@
                       </p>
                     </a>
                   </li>
+
+                  <?php
+                    } else if ($_SESSION['user']->rol == 3) {
+                    ?> <li class="nav-item">
+                    <a style="color: white;" href="/" class="nav-link">
+                      <i class="nav-icon fas fa-tachometer-alt"></i>
+                      <p>
+                        Tablero
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="color: white;" href="/?c=convocatorias" class="nav-link">
+                      <i class="nav-icon fas fa-folder"></i>
+                      <p>
+                        Convocatorias
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="color: white;" href="/?c=proyectos" class="nav-link">
+                      <i class="nav-icon fas fa-folder"></i>
+                      <p>
+                        Proyectos
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="color: white;" href="/?c=feria" class="nav-link">
+                      <i class="nav-icon fas fa-folder"></i>
+                      <p>
+                        Ferias
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="color: white;" href="/?c=logout" class="nav-link">
+                      <i class="nav-icon fas fa-arrow-left"></i>
+                      <p>
+                        Cerrar sesión
+                      </p>
+                    </a>
+                  </li>
+                  
                     <?php
                     } else {
                     ?> <li class="nav-item">
@@ -145,6 +189,14 @@
                       <i class="nav-icon fas fa-tachometer-alt"></i>
                       <p>
                         Tablero
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="color: white;" href="/?c=convocatorias" class="nav-link">
+                      <i class="nav-icon fas fa-folder"></i>
+                      <p>
+                        Convocatorias
                       </p>
                     </a>
                   </li>
@@ -174,8 +226,7 @@
                   </li>
                     <?php
                     }
-                    ?>
-         
+                    ?>         
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
